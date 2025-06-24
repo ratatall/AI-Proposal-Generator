@@ -1,0 +1,242 @@
+{
+  "name": "AI Proposal Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "replaceText",
+        "presentationId": "={{json.id}}",
+        "textUi": {
+          "textValues": [
+            {
+              "text": "{{Title}}",
+              "replaceText": "={{$('OpenAI').item.json.message.content.proposalTitle}}"
+            },
+            {
+              "text": "{{description}}",
+              "replaceText": "={{$('OpenAI').item.json.message.content.description}}"
+            },
+            {
+              "text": "{{cost}}",
+              "replaceText": "={{$('OpenAI').item.json.message.content.cost}}"
+            },
+            {
+              "text": "={{period}}",
+              "replaceText": "={{$('OpenAI').item.json.message.content.period}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSlides",
+      "typeVersion": 2,
+      "position": [
+        860,
+        0
+      ],
+      "id": "94d756fd-863c-4d52-988b-c7204e77176d",
+      "name": "Google Slides",
+      "credentials": {
+        "googleSlidesOAuth2Api": {
+          "id": "AGqtykX94wFzpxWx",
+          "name": "Google Slides account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are helpful, intelligent writing assistant.",
+              "role": "system"
+            },
+            {
+              "content": "Your task is to generate a proposal using data from the form. This proposal should be highly customized, unique for every project considering we will be sending this to our clients.\n\nThe proposal template we use has many fields. You must use return these fields in one JSON object.\n\nContext: We are an AI Agents agency working on developing AI products for various clients. \nCurrent date: Mar 20, 2025.\nUse this format:\n\n{\"proposalTitle:\":\"\", \n\"description\":\"\",\n\"cost\":\"\",\n\"period\":\"\"\n}\n\nRules:\n1. Be specific, professional, and to the point\n2. Use casual tone\n3. Ensure that all fields are filled out"
+            },
+            {
+              "content": "Here is information about proposal in JSON Format:\n\n{\"companyName\":\"AdilkhanIndustries\",\n\"problem\":\"\",\n\"solution\":\"building AI agents\",\n\"scope\":\"10 n8n projects for 30k customers\"}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        220,
+        0
+      ],
+      "id": "4f242be8-654f-4afb-a438-26793895ecb7",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "GhVbeuAZZZ3QTplk",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "name": "Proposal",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        580,
+        0
+      ],
+      "id": "006da585-4980-4694-aa91-7e4b4f9b8dc2",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "YXVMztIVYv9kUgZd",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "info@example.com",
+        "subject": "Proposal",
+        "message": "Hey nick, thanks for the great call! \n\nThis is a proposal:https://docs.google.com/presentation/d/{{json.presentationID}}/edit?usp=sharing",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1080,
+        0
+      ],
+      "id": "34ea6e40-b573-469e-9eb0-f42cec96462d",
+      "name": "Gmail",
+      "webhookId": "df17d463-94b2-4643-a806-c25564aaa6ee",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6QVYO0xvZuAuERk5",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Proposal Info",
+        "formDescription": "This form gets every info and automatically generates a proposal",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "First Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Last Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Company Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Problem",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Solution",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Cost",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Period",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "f5b02c6d-bf7a-460e-9dec-dd701df8092c",
+      "name": "On form submission",
+      "webhookId": "17e476cf-8c52-49af-a2d0-de6f898f656b"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Google Slides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Slides": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c914ce96-a737-4f92-b805-78ca85ec183e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "zui4SXj2rRyH9NOP",
+  "tags": []
+}
