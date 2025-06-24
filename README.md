@@ -2,7 +2,7 @@
 
 ## Workflow Screenshot
 
-![AI Proposal Generator Workflow](Screenshot 2025-06-24 at 13.20.11.png)
+![AI Proposal Generator Workflow](<Screenshot 2025-06-24 at 13.20.11.png>)
 
 *Note: Any errors visible in the screenshot are due to deleted API tokens. These tokens were removed for privacy and security reasons.*
 
